@@ -9,3 +9,11 @@ body,
 * {
   box-sizing: border-box;
 }
+
+.MuiDataGrid-root {
+  border: none !important;
+}
+
+.MuiDataGrid-columnHeaders {
+  background-color: rgba(91, 108, 255, 0.04);
+}

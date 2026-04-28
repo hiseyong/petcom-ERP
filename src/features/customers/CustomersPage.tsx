@@ -1,20 +1,17 @@
-import { useEffect, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Box,
   Button,
   Card,
   CardContent,
   Divider,
-  MenuItem,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { apiClient } from '../../shared/api/client'
-import { customerFormSchema, healthRecordSchema, petFormSchema, type CustomerFormValues, type HealthRecordFormValues, type PetFormValues } from '../../shared/schemas/customerPetSchema'
+import type { CustomerFormValues, HealthRecordFormValues, PetFormValues } from '../../shared/schemas/customerPetSchema'
 import type { Customer, PetProfile } from '../../shared/types/domain'
 import {
   addCustomer,
@@ -23,23 +20,21 @@ import {
   setCustomersData,
   setSelectedCustomerId,
 } from './customersSlice'
+import { CustomerCreateModal } from './CustomerCreateModal'
+import { PetCreateModal } from './PetCreateModal'
+import { HealthRecordCreateModal } from './HealthRecordCreateModal'
 
 export function CustomersPage() {
   const dispatch = useAppDispatch()
   const { customers, pets, selectedCustomerId } = useAppSelector((state) => state.customers)
+  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false)
+  const [isPetModalOpen, setIsPetModalOpen] = useState(false)
+  const [isHealthModalOpen, setIsHealthModalOpen] = useState(false)
   const selectedPets = useMemo(
     () => pets.filter((pet) => pet.customerId === selectedCustomerId),
     [pets, selectedCustomerId],
   )
   const firstPet = selectedPets[0]
-
-  const customerForm = useForm<CustomerFormValues>({ defaultValues: { name: '', phone: '', email: '', memo: '' } })
-  const petForm = useForm<PetFormValues>({
-    defaultValues: { customerId: '', name: '', species: 'dog', breed: '', age: 1, weightKg: 1 },
-  })
-  const recordForm = useForm<HealthRecordFormValues>({
-    defaultValues: { date: '', type: 'checkup', detail: '' },
-  })
 
   useEffect(() => {
     if (customers.length > 0) {
@@ -67,35 +62,44 @@ export function CustomersPage() {
     { field: 'weightKg', headerName: '체중(kg)', flex: 0.8, minWidth: 100 },
   ]
 
-  const submitCustomer = customerForm.handleSubmit(async (values) => {
-    await customerFormSchema.validate(values)
+  const submitCustomer = (values: CustomerFormValues) => {
     dispatch(addCustomer({ id: crypto.randomUUID(), ...values }))
-    customerForm.reset()
-  })
+  }
 
-  const submitPet = petForm.handleSubmit(async (values) => {
-    await petFormSchema.validate(values)
+  const submitPet = (values: PetFormValues) => {
     dispatch(addPet({ id: crypto.randomUUID(), healthRecords: [], ...values }))
-    petForm.reset({ customerId: values.customerId, name: '', species: 'dog', breed: '', age: 1, weightKg: 1 })
-  })
+  }
 
-  const submitRecord = recordForm.handleSubmit(async (values) => {
+  const submitRecord = (values: HealthRecordFormValues) => {
     if (!firstPet) {
       return
     }
-    await healthRecordSchema.validate(values)
     dispatch(
       addHealthRecord({
         petId: firstPet.id,
         record: { id: crypto.randomUUID(), ...values },
       }),
     )
-    recordForm.reset({ date: '', type: 'checkup', detail: '' })
-  })
+  }
 
   return (
     <Stack spacing={3}>
       <Typography variant="h5">고객 및 반려동물 관리</Typography>
+      <Stack direction="row" spacing={1}>
+        <Button variant="contained" onClick={() => setIsCustomerModalOpen(true)}>
+          고객 등록
+        </Button>
+        <Button variant="outlined" onClick={() => setIsPetModalOpen(true)} disabled={!customers.length}>
+          반려동물 등록
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => setIsHealthModalOpen(true)}
+          disabled={!firstPet}
+        >
+          건강이력 추가
+        </Button>
+      </Stack>
       <Card>
         <CardContent>
           <Typography variant="h6">고객 조회</Typography>
@@ -133,53 +137,23 @@ export function CustomersPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardContent>
-          <Typography variant="h6">고객/반려동물/건강이력 등록</Typography>
-          <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ mt: 1.5 }}>
-            <Box component="form" onSubmit={submitCustomer} sx={{ flex: 1 }}>
-              <TextField label="고객명" size="small" fullWidth {...customerForm.register('name')} sx={{ mb: 1 }} />
-              <TextField label="연락처" size="small" fullWidth {...customerForm.register('phone')} sx={{ mb: 1 }} />
-              <TextField label="이메일" size="small" fullWidth {...customerForm.register('email')} sx={{ mb: 1 }} />
-              <TextField label="메모" size="small" fullWidth {...customerForm.register('memo')} />
-              <Button sx={{ mt: 1 }} variant="contained" type="submit">
-                고객 등록
-              </Button>
-            </Box>
-            <Box component="form" onSubmit={submitPet} sx={{ flex: 1 }}>
-              <TextField select label="보호자" size="small" fullWidth {...petForm.register('customerId')} sx={{ mb: 1 }}>
-                {customers.map((customer) => (
-                  <MenuItem key={customer.id} value={customer.id}>
-                    {customer.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField label="반려동물명" size="small" fullWidth {...petForm.register('name')} sx={{ mb: 1 }} />
-              <TextField select label="종" size="small" fullWidth {...petForm.register('species')} sx={{ mb: 1 }}>
-                <MenuItem value="dog">강아지</MenuItem>
-                <MenuItem value="cat">고양이</MenuItem>
-              </TextField>
-              <TextField label="품종" size="small" fullWidth {...petForm.register('breed')} sx={{ mb: 1 }} />
-              <TextField label="나이" size="small" type="number" fullWidth {...petForm.register('age', { valueAsNumber: true })} sx={{ mb: 1 }} />
-              <TextField label="체중(kg)" size="small" type="number" fullWidth {...petForm.register('weightKg', { valueAsNumber: true })} />
-              <Button sx={{ mt: 1 }} variant="contained" type="submit">
-                반려동물 등록
-              </Button>
-            </Box>
-            <Box component="form" onSubmit={submitRecord} sx={{ flex: 1 }}>
-              <TextField size="small" type="date" fullWidth slotProps={{ inputLabel: { shrink: true } }} label="기록일" {...recordForm.register('date')} sx={{ mb: 1 }} />
-              <TextField select label="유형" size="small" fullWidth {...recordForm.register('type')} sx={{ mb: 1 }}>
-                <MenuItem value="vaccination">접종</MenuItem>
-                <MenuItem value="checkup">검진</MenuItem>
-              </TextField>
-              <TextField label="상세내용" size="small" fullWidth {...recordForm.register('detail')} />
-              <Button sx={{ mt: 1 }} variant="contained" type="submit" disabled={!firstPet}>
-                건강 이력 추가
-              </Button>
-            </Box>
-          </Stack>
-        </CardContent>
-      </Card>
+      <CustomerCreateModal
+        open={isCustomerModalOpen}
+        onClose={() => setIsCustomerModalOpen(false)}
+        onSubmit={submitCustomer}
+      />
+      <PetCreateModal
+        open={isPetModalOpen}
+        onClose={() => setIsPetModalOpen(false)}
+        customers={customers}
+        onSubmit={submitPet}
+      />
+      <HealthRecordCreateModal
+        open={isHealthModalOpen}
+        onClose={() => setIsHealthModalOpen(false)}
+        disabled={!firstPet}
+        onSubmit={submitRecord}
+      />
     </Stack>
   )
 }
