@@ -1,0 +1,122 @@
+[
+  {
+    "id": "pay1",
+    "date": "2026-04-25",
+    "customerName": "김지은",
+    "petName": "콩이",
+    "serviceName": "미용 패키지",
+    "amount": 85000,
+    "method": "card",
+    "manager": "매니저1"
+  },
+  {
+    "id": "pay2",
+    "date": "2026-04-26",
+    "customerName": "박도현",
+    "petName": "나비",
+    "serviceName": "건강 체크",
+    "amount": 50000,
+    "method": "transfer",
+    "manager": "매니저2"
+  },
+  {
+    "id": "pay3",
+    "date": "2026-04-27",
+    "customerName": "이수민",
+    "petName": "두부",
+    "serviceName": "부분 미용",
+    "amount": 65000,
+    "method": "card",
+    "manager": "매니저1"
+  },
+  {
+    "id": "pay4",
+    "date": "2026-04-28",
+    "customerName": "최민재",
+    "petName": "라떼",
+    "serviceName": "스케일링 상담",
+    "amount": 70000,
+    "method": "cash",
+    "manager": "매니저3"
+  },
+  {
+    "id": "pay5",
+    "date": "2026-04-29",
+    "customerName": "정하늘",
+    "petName": "망고",
+    "serviceName": "피부 관리",
+    "amount": 92000,
+    "method": "card",
+    "manager": "매니저2"
+  },
+  {
+    "id": "pay6",
+    "date": "2026-04-30",
+    "customerName": "윤가은",
+    "petName": "보리",
+    "serviceName": "목욕",
+    "amount": 45000,
+    "method": "transfer",
+    "manager": "매니저1"
+  },
+  {
+    "id": "pay7",
+    "date": "2026-05-01",
+    "customerName": "서유진",
+    "petName": "코코",
+    "serviceName": "가위컷",
+    "amount": 79000,
+    "method": "card",
+    "manager": "매니저2"
+  },
+  {
+    "id": "pay8",
+    "date": "2026-05-01",
+    "customerName": "오지훈",
+    "petName": "초코",
+    "serviceName": "귀 세정",
+    "amount": 38000,
+    "method": "cash",
+    "manager": "매니저3"
+  },
+  {
+    "id": "pay9",
+    "date": "2026-05-02",
+    "customerName": "강아름",
+    "petName": "모찌",
+    "serviceName": "호텔 체크인",
+    "amount": 120000,
+    "method": "card",
+    "manager": "매니저1"
+  },
+  {
+    "id": "pay10",
+    "date": "2026-05-02",
+    "customerName": "김지은",
+    "petName": "콩이",
+    "serviceName": "목욕",
+    "amount": 43000,
+    "method": "transfer",
+    "manager": "매니저2"
+  },
+  {
+    "id": "pay11",
+    "date": "2026-05-03",
+    "customerName": "박도현",
+    "petName": "나비",
+    "serviceName": "정기 검진",
+    "amount": 55000,
+    "method": "card",
+    "manager": "매니저3"
+  },
+  {
+    "id": "pay12",
+    "date": "2026-05-03",
+    "customerName": "한도윤",
+    "petName": "밤이",
+    "serviceName": "호텔 1박",
+    "amount": 140000,
+    "method": "cash",
+    "manager": "매니저1"
+  }
+]

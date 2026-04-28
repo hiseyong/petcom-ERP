@@ -1,0 +1,172 @@
+[
+  {
+    "id": "p1",
+    "customerId": "c1",
+    "name": "콩이",
+    "species": "dog",
+    "breed": "푸들",
+    "age": 4,
+    "weightKg": 5.8,
+    "healthRecords": [
+      {
+        "id": "h1",
+        "date": "2026-04-05",
+        "type": "vaccination",
+        "detail": "종합백신 5차"
+      }
+    ]
+  },
+  {
+    "id": "p2",
+    "customerId": "c2",
+    "name": "나비",
+    "species": "cat",
+    "breed": "코리안숏헤어",
+    "age": 2,
+    "weightKg": 3.9,
+    "healthRecords": [
+      {
+        "id": "h2",
+        "date": "2026-04-20",
+        "type": "checkup",
+        "detail": "정기 검진 정상"
+      }
+    ]
+  },
+  {
+    "id": "p3",
+    "customerId": "c3",
+    "name": "두부",
+    "species": "dog",
+    "breed": "비숑",
+    "age": 8,
+    "weightKg": 6.4,
+    "healthRecords": [
+      {
+        "id": "h3",
+        "date": "2026-04-11",
+        "type": "checkup",
+        "detail": "슬개골 정기 체크"
+      }
+    ]
+  },
+  {
+    "id": "p4",
+    "customerId": "c4",
+    "name": "라떼",
+    "species": "cat",
+    "breed": "러시안블루",
+    "age": 3,
+    "weightKg": 4.2,
+    "healthRecords": [
+      {
+        "id": "h4",
+        "date": "2026-04-13",
+        "type": "vaccination",
+        "detail": "광견병 접종"
+      }
+    ]
+  },
+  {
+    "id": "p5",
+    "customerId": "c5",
+    "name": "망고",
+    "species": "dog",
+    "breed": "말티즈",
+    "age": 5,
+    "weightKg": 3.1,
+    "healthRecords": [
+      {
+        "id": "h5",
+        "date": "2026-04-16",
+        "type": "checkup",
+        "detail": "피부 트러블 케어"
+      }
+    ]
+  },
+  {
+    "id": "p6",
+    "customerId": "c6",
+    "name": "보리",
+    "species": "dog",
+    "breed": "웰시코기",
+    "age": 2,
+    "weightKg": 10.8,
+    "healthRecords": [
+      {
+        "id": "h6",
+        "date": "2026-04-18",
+        "type": "vaccination",
+        "detail": "종합백신 3차"
+      }
+    ]
+  },
+  {
+    "id": "p7",
+    "customerId": "c7",
+    "name": "밤이",
+    "species": "cat",
+    "breed": "브리티시숏헤어",
+    "age": 4,
+    "weightKg": 5.1,
+    "healthRecords": [
+      {
+        "id": "h7",
+        "date": "2026-04-22",
+        "type": "checkup",
+        "detail": "체중 관리 상담"
+      }
+    ]
+  },
+  {
+    "id": "p8",
+    "customerId": "c8",
+    "name": "코코",
+    "species": "dog",
+    "breed": "포메라니안",
+    "age": 6,
+    "weightKg": 4.0,
+    "healthRecords": [
+      {
+        "id": "h8",
+        "date": "2026-04-24",
+        "type": "vaccination",
+        "detail": "코로나 장염 백신"
+      }
+    ]
+  },
+  {
+    "id": "p9",
+    "customerId": "c9",
+    "name": "초코",
+    "species": "dog",
+    "breed": "시바견",
+    "age": 3,
+    "weightKg": 9.7,
+    "healthRecords": [
+      {
+        "id": "h9",
+        "date": "2026-04-25",
+        "type": "checkup",
+        "detail": "귀 염증 소독"
+      }
+    ]
+  },
+  {
+    "id": "p10",
+    "customerId": "c10",
+    "name": "모찌",
+    "species": "cat",
+    "breed": "페르시안",
+    "age": 7,
+    "weightKg": 4.8,
+    "healthRecords": [
+      {
+        "id": "h10",
+        "date": "2026-04-27",
+        "type": "vaccination",
+        "detail": "종합백신 추가 접종"
+      }
+    ]
+  }
+]

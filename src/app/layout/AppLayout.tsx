@@ -2,6 +2,7 @@ import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material'
 import { NavLink, Outlet } from 'react-router-dom'
 
 const navItems = [
+  { to: '/', label: '대시보드' },
   { to: '/reservations', label: '예약 관리' },
   { to: '/customers', label: '고객/반려동물' },
   { to: '/sales', label: '결제/매출' },
@@ -21,7 +22,17 @@ export function AppLayout() {
         }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', minHeight: 70 }}>
-          <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+          <Typography
+            component={NavLink}
+            to="/"
+            variant="h6"
+            sx={{
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              textDecoration: 'none',
+              color: 'inherit',
+            }}
+          >
             PetCom ERP
           </Typography>
           <Stack direction="row" spacing={1}>

@@ -1,17 +1,5 @@
-import { useEffect, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { useEffect, useMemo, useState } from 'react'
+import { Box, Button, Card, CardContent, MenuItem, Stack, TextField, Typography } from '@mui/material'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { apiClient } from '../../shared/api/client'
@@ -21,9 +9,12 @@ import {
   addReservation,
   setReservationFilter,
   setReservations,
+  updateReservation,
   updateReservationStatus,
 } from './reservationsSlice'
-import { reservationFormSchema, type ReservationFormValues } from '../../shared/schemas/reservationSchema'
+import type { ReservationFormValues } from '../../shared/schemas/reservationSchema'
+import { ReservationCreateModal } from './ReservationCreateModal'
+import { ReservationEditModal } from './ReservationEditModal'
 
 const statusOptions: Array<{ value: ReservationStatus; label: string }> = [
   { value: 'pending', label: '대기' },
@@ -35,23 +26,9 @@ const statusOptions: Array<{ value: ReservationStatus; label: string }> = [
 export function ReservationsPage() {
   const dispatch = useAppDispatch()
   const { items, statusFilter } = useAppSelector((state) => state.reservations)
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    setError,
-  } = useForm<ReservationFormValues>({
-    defaultValues: {
-      date: '',
-      time: '',
-      customerName: '',
-      petName: '',
-      serviceName: '',
-      staffName: '',
-      notes: '',
-    },
-  })
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null)
 
   useEffect(() => {
     if (items.length > 0) {
@@ -93,9 +70,19 @@ export function ReservationsPage() {
         headerName: '변경',
         sortable: false,
         filterable: false,
-        width: 180,
+        width: 250,
         renderCell: (params) => (
           <Stack direction="row" spacing={1}>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => {
+                setEditingReservation(params.row)
+                setIsEditModalOpen(true)
+              }}
+            >
+              변경
+            </Button>
             <Button
               size="small"
               onClick={() =>
@@ -120,102 +107,55 @@ export function ReservationsPage() {
     [dispatch],
   )
 
-  const onSubmit = handleSubmit(async (values) => {
-    try {
-      await reservationFormSchema.validate(values, { abortEarly: false })
-      dispatch(
-        addReservation({
-          id: crypto.randomUUID(),
-          customerId: values.customerName,
-          petId: values.petName,
-          status: 'confirmed',
-          ...values,
-        }),
-      )
-      reset()
-    } catch {
-      setError('root', { message: '입력값을 확인해주세요.' })
+  const onSubmit = (values: ReservationFormValues) => {
+    dispatch(
+      addReservation({
+        id: crypto.randomUUID(),
+        customerId: values.customerName,
+        petId: values.petName,
+        status: 'confirmed',
+        ...values,
+      }),
+    )
+  }
+
+  const onEditSubmit = (values: ReservationFormValues) => {
+    if (!editingReservation) {
+      return
     }
-  })
+    dispatch(
+      updateReservation({
+        ...editingReservation,
+        ...values,
+      }),
+    )
+  }
 
   return (
     <Stack spacing={3}>
       <Typography variant="h5">예약 관리</Typography>
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            예약 등록/변경
-          </Typography>
-          <Box component="form" onSubmit={onSubmit}>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 2 }}>
-                <TextField
-                  fullWidth
-                  type="date"
-                  label="날짜"
-                  slotProps={{ inputLabel: { shrink: true } }}
-                  error={Boolean(errors.date)}
-                  helperText={errors.date?.message}
-                  {...register('date')}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 2 }}>
-                <TextField
-                  fullWidth
-                  type="time"
-                  label="시간"
-                  slotProps={{ inputLabel: { shrink: true } }}
-                  error={Boolean(errors.time)}
-                  helperText={errors.time?.message}
-                  {...register('time')}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 2 }}>
-                <TextField fullWidth label="고객명" error={Boolean(errors.customerName)} helperText={errors.customerName?.message} {...register('customerName')} />
-              </Grid>
-              <Grid size={{ xs: 12, md: 2 }}>
-                <TextField fullWidth label="반려동물명" error={Boolean(errors.petName)} helperText={errors.petName?.message} {...register('petName')} />
-              </Grid>
-              <Grid size={{ xs: 12, md: 2 }}>
-                <TextField fullWidth label="서비스명" error={Boolean(errors.serviceName)} helperText={errors.serviceName?.message} {...register('serviceName')} />
-              </Grid>
-              <Grid size={{ xs: 12, md: 2 }}>
-                <TextField fullWidth label="담당자" error={Boolean(errors.staffName)} helperText={errors.staffName?.message} {...register('staffName')} />
-              </Grid>
-              <Grid size={12}>
-                <TextField fullWidth label="메모" {...register('notes')} />
-              </Grid>
-            </Grid>
-            <Stack direction="row" sx={{ mt: 2, justifyContent: 'space-between' }}>
-              <TextField
-                select
-                size="small"
-                label="상태 필터"
-                value={statusFilter}
-                onChange={(event) =>
-                  dispatch(setReservationFilter(event.target.value as ReservationStatus | 'all'))
-                }
-                sx={{ width: 170 }}
-              >
-                <MenuItem value="all">전체</MenuItem>
-                {statusOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Button type="submit" variant="contained">
-                예약 저장
-              </Button>
-            </Stack>
-            {errors.root?.message ? (
-              <Alert sx={{ mt: 2 }} severity="error">
-                {errors.root.message}
-              </Alert>
-            ) : null}
-          </Box>
-        </CardContent>
-      </Card>
+      <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+        <TextField
+          select
+          size="small"
+          label="상태 필터"
+          value={statusFilter}
+          onChange={(event) =>
+            dispatch(setReservationFilter(event.target.value as ReservationStatus | 'all'))
+          }
+          sx={{ width: 170 }}
+        >
+          <MenuItem value="all">전체</MenuItem>
+          {statusOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <Button variant="contained" onClick={() => setIsCreateModalOpen(true)}>
+          예약 등록
+        </Button>
+      </Stack>
 
       <Card>
         <CardContent>
@@ -253,6 +193,20 @@ export function ReservationsPage() {
           </Box>
         </CardContent>
       </Card>
+      <ReservationCreateModal
+        open={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={onSubmit}
+      />
+      <ReservationEditModal
+        open={isEditModalOpen}
+        reservation={editingReservation}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setEditingReservation(null)
+        }}
+        onSubmit={onEditSubmit}
+      />
     </Stack>
   )
 }

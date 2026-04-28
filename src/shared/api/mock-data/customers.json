@@ -1,0 +1,67 @@
+[
+  {
+    "id": "c1",
+    "name": "김지은",
+    "phone": "010-1234-5566",
+    "email": "jieun@pet.com",
+    "memo": "피부 민감"
+  },
+  {
+    "id": "c2",
+    "name": "박도현",
+    "phone": "010-8899-4433",
+    "email": "dohyeon@pet.com"
+  },
+  {
+    "id": "c3",
+    "name": "이수민",
+    "phone": "010-2771-9033",
+    "email": "sumin@pet.com",
+    "memo": "노령견 케어 요청"
+  },
+  {
+    "id": "c4",
+    "name": "최민재",
+    "phone": "010-7123-4455",
+    "email": "minjae@pet.com"
+  },
+  {
+    "id": "c5",
+    "name": "정하늘",
+    "phone": "010-5682-3311",
+    "email": "haneul@pet.com",
+    "memo": "알러지 사료 문의"
+  },
+  {
+    "id": "c6",
+    "name": "윤가은",
+    "phone": "010-9844-1200",
+    "email": "gaeun@pet.com"
+  },
+  {
+    "id": "c7",
+    "name": "한도윤",
+    "phone": "010-3345-7720",
+    "email": "doyoon@pet.com",
+    "memo": "픽업 서비스 선호"
+  },
+  {
+    "id": "c8",
+    "name": "서유진",
+    "phone": "010-6201-8890",
+    "email": "yujin@pet.com"
+  },
+  {
+    "id": "c9",
+    "name": "오지훈",
+    "phone": "010-4478-5611",
+    "email": "jihoon@pet.com"
+  },
+  {
+    "id": "c10",
+    "name": "강아름",
+    "phone": "010-8081-2334",
+    "email": "areum@pet.com",
+    "memo": "정기 미용권 이용중"
+  }
+]
