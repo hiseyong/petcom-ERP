@@ -1,4 +1,10 @@
-import type { ReservationStatus } from './common'
+import type {
+  PurchaseOrderStatus,
+  ReservationStatus,
+  TaxDocumentKind,
+  TaxDocumentStatus,
+  TaxExpenseEvidence,
+} from './common'
 
 export interface Reservation {
   id: string
@@ -49,4 +55,43 @@ export interface Payment {
   amount: number
   method: 'card' | 'cash' | 'transfer'
   manager: string
+}
+
+export interface PurchaseOrder {
+  id: string
+  orderedAt: string
+  supplierName: string
+  itemSummary: string
+  status: PurchaseOrderStatus
+  expectedDate: string
+}
+
+export interface DashboardAlert {
+  id: string
+  title: string
+  message: string
+  severity: 'info' | 'warning' | 'success'
+  createdAt: string
+}
+
+export interface TaxDocument {
+  id: string
+  issueDate: string
+  kind: TaxDocumentKind
+  counterpartyName: string
+  supplyAmount: number
+  vatAmount: number
+  totalAmount: number
+  status: TaxDocumentStatus
+}
+
+export interface TaxExpense {
+  id: string
+  bookedDate: string
+  vendorName: string
+  description: string
+  supplyAmount: number
+  vatAmount: number
+  totalAmount: number
+  evidence: TaxExpenseEvidence
 }

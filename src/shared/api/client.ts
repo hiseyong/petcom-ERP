@@ -1,4 +1,13 @@
-import { customersSeed, paymentsSeed, petsSeed, reservationsSeed } from './mockDb'
+import {
+  customersSeed,
+  dashboardAlertsSeed,
+  paymentsSeed,
+  petsSeed,
+  purchaseOrdersSeed,
+  reservationsSeed,
+  taxDocumentsSeed,
+  taxExpensesSeed,
+} from './mockDb'
 
 const delay = async (ms = 100) => {
   await new Promise((resolve) => setTimeout(resolve, ms))
@@ -12,6 +21,10 @@ export const apiClient = {
       pets: petsSeed,
       reservations: reservationsSeed,
       payments: paymentsSeed,
+      purchaseOrders: purchaseOrdersSeed,
+      dashboardAlerts: dashboardAlertsSeed,
+      taxDocuments: taxDocumentsSeed,
+      taxExpenses: taxExpensesSeed,
     }
   },
 }

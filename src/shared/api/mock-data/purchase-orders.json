@@ -1,0 +1,34 @@
+[
+  {
+    "id": "po1",
+    "orderedAt": "2026-05-09",
+    "supplierName": "펫케어 유통",
+    "itemSummary": "저자극 샴푸 6L, 귀 세정제",
+    "status": "in_transit",
+    "expectedDate": "2026-05-12"
+  },
+  {
+    "id": "po2",
+    "orderedAt": "2026-05-10",
+    "supplierName": "베터펫 의료소모품",
+    "itemSummary": "일회용 장갑, 거즈, 소독솜",
+    "status": "ordered",
+    "expectedDate": "2026-05-14"
+  },
+  {
+    "id": "po3",
+    "orderedAt": "2026-05-02",
+    "supplierName": "그루밍코리아",
+    "itemSummary": "가위 세트, 블레이드 #10",
+    "status": "received",
+    "expectedDate": "2026-05-08"
+  },
+  {
+    "id": "po4",
+    "orderedAt": "2026-04-28",
+    "supplierName": "펫푸드 직거래",
+    "itemSummary": "처방식 사료 20kg",
+    "status": "delayed",
+    "expectedDate": "2026-05-06"
+  }
+]

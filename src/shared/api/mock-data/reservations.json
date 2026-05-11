@@ -120,5 +120,30 @@
     "serviceName": "호텔 체크인",
     "staffName": "매니저1",
     "status": "confirmed"
+  },
+  {
+    "id": "r11",
+    "date": "2026-05-11",
+    "time": "11:00",
+    "customerId": "c2",
+    "customerName": "박도현",
+    "petId": "p2",
+    "petName": "나비",
+    "serviceName": "전체 미용",
+    "staffName": "트리머C",
+    "status": "pending",
+    "notes": "첫 방문"
+  },
+  {
+    "id": "r12",
+    "date": "2026-05-12",
+    "time": "15:30",
+    "customerId": "c4",
+    "customerName": "최민재",
+    "petId": "p4",
+    "petName": "라떼",
+    "serviceName": "스파 패키지",
+    "staffName": "관리사B",
+    "status": "pending"
   }
 ]

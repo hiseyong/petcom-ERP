@@ -1,9 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Card, CardContent, Grid, Stack, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material'
+import { Link } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { apiClient } from '../../shared/api/client'
+import type { PurchaseOrderStatus } from '../../shared/types/common'
+import type { DashboardAlert, PurchaseOrder, Reservation } from '../../shared/types/domain'
+import { setReservations } from '../reservations/reservationsSlice'
 
 const tenantInfo = {
-  companyName: '포포케어 동물케어센터',
-  representative: '김도윤',
+  companyName: '언타이틀드',
+  representative: '이재민',
   businessNo: '123-45-67890',
   address: '서울특별시 강남구 테헤란로 123, 5층',
   phone: '02-1234-5678',
@@ -19,8 +35,54 @@ const infoRows = [
   { label: '대표 이메일', value: tenantInfo.email },
 ]
 
+const purchaseStatusLabels: Record<PurchaseOrderStatus, string> = {
+  ordered: '발주 완료',
+  in_transit: '배송 중',
+  received: '입고 완료',
+  delayed: '지연',
+}
+
+const purchaseStatusColor: Record<
+  PurchaseOrderStatus,
+  'default' | 'primary' | 'success' | 'warning' | 'error'
+> = {
+  ordered: 'default',
+  in_transit: 'primary',
+  received: 'success',
+  delayed: 'warning',
+}
+
+const alertSeverityColor: Record<DashboardAlert['severity'], 'default' | 'info' | 'warning' | 'success'> = {
+  info: 'info',
+  warning: 'warning',
+  success: 'success',
+}
+
+function reservationSortKey(r: Reservation) {
+  return `${r.date}T${r.time}:00`
+}
+
+function formatShortDate(isoDate: string) {
+  return new Intl.DateTimeFormat('ko-KR', { month: 'short', day: 'numeric', weekday: 'short' }).format(
+    new Date(`${isoDate}T12:00:00`),
+  )
+}
+
+function formatDateTime(iso: string) {
+  return new Intl.DateTimeFormat('ko-KR', {
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(iso))
+}
+
 export function HomePage() {
+  const dispatch = useAppDispatch()
+  const reservationItems = useAppSelector((s) => s.reservations.items)
   const [now, setNow] = useState(() => new Date())
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([])
+  const [dashboardAlerts, setDashboardAlerts] = useState<DashboardAlert[]>([])
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -29,14 +91,50 @@ export function HomePage() {
     return () => window.clearInterval(timer)
   }, [])
 
+  useEffect(() => {
+    const load = async () => {
+      const data = await apiClient.loadBootstrapData()
+      if (reservationItems.length === 0) {
+        dispatch(setReservations(data.reservations))
+      }
+      setPurchaseOrders(data.purchaseOrders)
+      setDashboardAlerts(data.dashboardAlerts)
+    }
+    void load()
+  }, [dispatch, reservationItems.length])
+
   const formattedNow = useMemo(
     () =>
       new Intl.DateTimeFormat('ko-KR', {
-        dateStyle: 'full',
-        timeStyle: 'medium',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
       }).format(now),
     [now],
   )
+
+  const formattedDate = useMemo(
+    () =>
+      new Intl.DateTimeFormat('ko-KR', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+      }).format(now),
+    [now],
+  )
+
+  const greetingMessage = useMemo(() => {
+    const hour = now.getHours()
+    if (hour < 6) return '좋은 새벽입니다'
+    if (hour < 12) return '좋은 아침입니다'
+    if (hour < 18) return '좋은 오후입니다'
+    return '좋은 저녁입니다'
+  }, [now])
+
+  const pendingReservations = useMemo(() => {
+    const pending = reservationItems.filter((r) => r.status === 'pending')
+    return [...pending].sort((a, b) => reservationSortKey(b).localeCompare(reservationSortKey(a)))
+  }, [reservationItems])
 
   return (
     <Stack spacing={3}>
@@ -48,34 +146,140 @@ export function HomePage() {
           <Typography variant="body1" color="text.secondary">
             오늘도 반려동물 케어 운영을 더 쉽고 빠르게 관리해보세요.
           </Typography>
-          <Stack
-            sx={{
-              mt: 2.5,
-              px: 2.2,
-              py: 1.6,
-              borderRadius: 2,
-              bgcolor: 'rgba(91,108,255,0.1)',
-              border: '1px solid rgba(91,108,255,0.2)',
-              width: 'fit-content',
-            }}
-          >
-            <Typography variant="caption" color="text.secondary">
-              현재 시각
-            </Typography>
+          <Stack sx={{ mt: 4, alignItems: 'center', textAlign: 'center' }}>
             <Typography
               sx={{
-                color: 'primary.main',
-                fontSize: { xs: 22, md: 28 },
-                lineHeight: 1.2,
-                fontWeight: 800,
-                letterSpacing: '-0.02em',
+                fontSize: { xs: 56, md: 88 },
+                lineHeight: 1,
+                fontWeight: 700,
+                letterSpacing: '-0.04em',
+                color: 'text.primary',
               }}
             >
               {formattedNow}
             </Typography>
+            <Typography sx={{ mt: 1, color: 'text.secondary', letterSpacing: '0.01em' }}>
+              {formattedDate}
+            </Typography>
+            <Typography
+              sx={{
+                mt: 2.5,
+                fontSize: { xs: 22, md: 28 },
+                fontWeight: 600,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {greetingMessage}, {tenantInfo.companyName}님.
+            </Typography>
           </Stack>
         </CardContent>
       </Card>
+
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="h6">신규 예약</Typography>
+                <Chip label={`대기 ${pendingReservations.length}건`} size="small" color="warning" variant="outlined" />
+              </Stack>
+              <Typography variant="body2" color="text.secondary">
+                확정 대기 중인 예약입니다.
+              </Typography>
+              <Stack divider={<Divider flexItem />} spacing={1.5} sx={{ flex: 1, minHeight: 120 }}>
+                {pendingReservations.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
+                    대기 중인 신규 예약이 없습니다.
+                  </Typography>
+                ) : (
+                  pendingReservations.slice(0, 5).map((r) => (
+                    <Box key={r.id}>
+                      <Typography variant="caption" color="text.secondary">
+                        {formatShortDate(r.date)} · {r.time}
+                      </Typography>
+                      <Typography variant="subtitle2" sx={{ mt: 0.25 }}>
+                        {r.customerName} · {r.petName}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {r.serviceName} · {r.staffName}
+                      </Typography>
+                    </Box>
+                  ))
+                )}
+              </Stack>
+              <Button component={Link} to="/reservations" variant="outlined" size="small" fullWidth>
+                예약 관리로 이동
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
+              <Typography variant="h6">발주 현황</Typography>
+              <Typography variant="body2" color="text.secondary">
+                최근 발주 및 입고 일정입니다.
+              </Typography>
+              <Stack divider={<Divider flexItem />} spacing={1.5} sx={{ flex: 1, minHeight: 120 }}>
+                {purchaseOrders.slice(0, 5).map((po) => (
+                  <Stack
+                    key={po.id}
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
+                  >
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography variant="subtitle2" noWrap title={po.supplierName}>
+                        {po.supplierName}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.25 }} noWrap title={po.itemSummary}>
+                        {po.itemSummary}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        입고 예정 {formatShortDate(po.expectedDate)}
+                      </Typography>
+                    </Box>
+                    <Chip
+                      label={purchaseStatusLabels[po.status]}
+                      size="small"
+                      color={purchaseStatusColor[po.status]}
+                      sx={{ flexShrink: 0 }}
+                    />
+                  </Stack>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Card sx={{ height: '100%' }}>
+            <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
+              <Typography variant="h6">기타 알림</Typography>
+              <Typography variant="body2" color="text.secondary">
+                운영·재고·일정 관련 안내입니다.
+              </Typography>
+              <Stack divider={<Divider flexItem />} spacing={1.5} sx={{ flex: 1, minHeight: 120 }}>
+                {dashboardAlerts.map((a) => (
+                  <Box key={a.id}>
+                    <Stack direction="row" spacing={1} sx={{ mb: 0.5, alignItems: 'center' }}>
+                      <Chip label={a.severity === 'warning' ? '주의' : a.severity === 'success' ? '완료' : '안내'} size="small" color={alertSeverityColor[a.severity]} variant="outlined" />
+                      <Typography variant="subtitle2">{a.title}</Typography>
+                    </Stack>
+                    <Typography variant="body2" color="text.secondary">
+                      {a.message}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                      {formatDateTime(a.createdAt)}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
       <Card>
         <CardContent sx={{ p: 4 }}>

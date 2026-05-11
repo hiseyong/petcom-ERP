@@ -6,6 +6,7 @@ const navItems = [
   { to: '/reservations', label: '예약 관리' },
   { to: '/customers', label: '고객/반려동물' },
   { to: '/sales', label: '결제/매출' },
+  { to: '/tax', label: '세무' },
 ]
 
 export function AppLayout() {

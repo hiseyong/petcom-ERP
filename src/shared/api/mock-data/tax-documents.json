@@ -1,0 +1,82 @@
+[
+  {
+    "id": "td1",
+    "issueDate": "2026-04-26",
+    "kind": "cash_receipt",
+    "counterpartyName": "박도현",
+    "supplyAmount": 45455,
+    "vatAmount": 4545,
+    "totalAmount": 50000,
+    "status": "issued"
+  },
+  {
+    "id": "td2",
+    "issueDate": "2026-04-28",
+    "kind": "tax_invoice",
+    "counterpartyName": "펫케어 유통(주)",
+    "supplyAmount": 1818182,
+    "vatAmount": 181818,
+    "totalAmount": 2000000,
+    "status": "issued"
+  },
+  {
+    "id": "td3",
+    "issueDate": "2026-04-30",
+    "kind": "cash_receipt",
+    "counterpartyName": "윤가은",
+    "supplyAmount": 40909,
+    "vatAmount": 4091,
+    "totalAmount": 45000,
+    "status": "issued"
+  },
+  {
+    "id": "td4",
+    "issueDate": "2026-05-01",
+    "kind": "cash_receipt",
+    "counterpartyName": "서유진",
+    "supplyAmount": 71818,
+    "vatAmount": 7182,
+    "totalAmount": 79000,
+    "status": "issued"
+  },
+  {
+    "id": "td5",
+    "issueDate": "2026-05-02",
+    "kind": "cash_receipt",
+    "counterpartyName": "강아름",
+    "supplyAmount": 109091,
+    "vatAmount": 10909,
+    "totalAmount": 120000,
+    "status": "issued"
+  },
+  {
+    "id": "td6",
+    "issueDate": "2026-05-03",
+    "kind": "tax_invoice",
+    "counterpartyName": "베터펫 의료소모품",
+    "supplyAmount": 500000,
+    "vatAmount": 50000,
+    "totalAmount": 550000,
+    "status": "pending"
+  },
+  {
+    "id": "td7",
+    "issueDate": "2026-05-03",
+    "kind": "cash_receipt",
+    "counterpartyName": "한도윤",
+    "supplyAmount": 127273,
+    "vatAmount": 12727,
+    "totalAmount": 140000,
+    "status": "issued"
+  },
+  {
+    "id": "td8",
+    "issueDate": "2026-04-15",
+    "kind": "cash_receipt",
+    "counterpartyName": "김지은",
+    "supplyAmount": 77273,
+    "vatAmount": 7727,
+    "totalAmount": 85000,
+    "status": "cancelled"
+  }
+]

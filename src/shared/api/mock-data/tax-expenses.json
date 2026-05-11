@@ -1,0 +1,52 @@
+[
+  {
+    "id": "te1",
+    "bookedDate": "2026-04-05",
+    "vendorName": "강남오피스텔 관리",
+    "description": "4월 임차료",
+    "supplyAmount": 2727273,
+    "vatAmount": 272727,
+    "totalAmount": 3000000,
+    "evidence": "tax_invoice"
+  },
+  {
+    "id": "te2",
+    "bookedDate": "2026-04-12",
+    "vendorName": "한국전력공사",
+    "description": "전기요금",
+    "supplyAmount": 136364,
+    "vatAmount": 13636,
+    "totalAmount": 150000,
+    "evidence": "card"
+  },
+  {
+    "id": "te3",
+    "bookedDate": "2026-04-18",
+    "vendorName": "펫케어 유통(주)",
+    "description": "소모품·샴푸",
+    "supplyAmount": 454545,
+    "vatAmount": 45455,
+    "totalAmount": 500000,
+    "evidence": "tax_invoice"
+  },
+  {
+    "id": "te4",
+    "bookedDate": "2026-05-02",
+    "vendorName": "그루밍코리아",
+    "description": "가위·블레이드",
+    "supplyAmount": 181818,
+    "vatAmount": 18182,
+    "totalAmount": 200000,
+    "evidence": "cash_receipt"
+  },
+  {
+    "id": "te5",
+    "bookedDate": "2026-05-08",
+    "vendorName": "통신요금(법인)",
+    "description": "5월 인터넷·전화",
+    "supplyAmount": 90909,
+    "vatAmount": 9091,
+    "totalAmount": 100000,
+    "evidence": "card"
+  }
+]
