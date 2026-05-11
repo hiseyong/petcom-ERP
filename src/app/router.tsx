@@ -5,6 +5,7 @@ import { ReservationsPage } from '../features/reservations/ReservationsPage'
 import { CustomersPage } from '../features/customers/CustomersPage'
 import { SalesPage } from '../features/sales/SalesPage'
 import { TaxPage } from '../features/tax/TaxPage'
+import { ExpensesPage } from '../features/expenses/ExpensesPage'
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
       { path: 'customers', element: <CustomersPage /> },
       { path: 'sales', element: <SalesPage /> },
       { path: 'tax', element: <TaxPage /> },
+      { path: 'expenses', element: <ExpensesPage /> },
     ],
   },
 ])

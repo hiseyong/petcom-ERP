@@ -6,7 +6,9 @@ export type TaxDocumentKind = 'tax_invoice' | 'cash_receipt'
 
 export type TaxDocumentStatus = 'issued' | 'cancelled' | 'pending'
 
-export type TaxExpenseEvidence = 'tax_invoice' | 'card' | 'cash_receipt'
+export type ExpenseEvidence = 'tax_invoice' | 'card' | 'cash_receipt'
+
+export type ExpenseCategory = 'rent' | 'utilities' | 'supplies' | 'communication' | 'equipment' | 'other'
 
 export interface PageQuery {
   page: number

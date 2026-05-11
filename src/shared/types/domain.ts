@@ -1,9 +1,10 @@
 import type {
+  ExpenseCategory,
+  ExpenseEvidence,
   PurchaseOrderStatus,
   ReservationStatus,
   TaxDocumentKind,
   TaxDocumentStatus,
-  TaxExpenseEvidence,
 } from './common'
 
 export interface Reservation {
@@ -85,7 +86,7 @@ export interface TaxDocument {
   status: TaxDocumentStatus
 }
 
-export interface TaxExpense {
+export interface Expense {
   id: string
   bookedDate: string
   vendorName: string
@@ -93,5 +94,6 @@ export interface TaxExpense {
   supplyAmount: number
   vatAmount: number
   totalAmount: number
-  evidence: TaxExpenseEvidence
+  evidence: ExpenseEvidence
+  category: ExpenseCategory
 }

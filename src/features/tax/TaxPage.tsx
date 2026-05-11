@@ -12,9 +12,10 @@ import {
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { apiClient } from '../../shared/api/client'
-import type { TaxDocument, TaxExpense } from '../../shared/types/domain'
+import type { Expense, TaxDocument } from '../../shared/types/domain'
+import { setExpenses } from '../expenses/expensesSlice'
 import { setPayments } from '../sales/salesSlice'
-import { setTaxDocuments, setTaxExpenses, setTaxReportMonth } from './taxSlice'
+import { setTaxDocuments, setTaxReportMonth } from './taxSlice'
 
 function splitVatInclusive(total: number) {
   const supplyAmount = Math.round(total / 1.1)
@@ -33,10 +34,19 @@ const docStatusLabel: Record<TaxDocument['status'], string> = {
   pending: '대기',
 }
 
-const evidenceLabel: Record<TaxExpense['evidence'], string> = {
+const evidenceLabel: Record<Expense['evidence'], string> = {
   tax_invoice: '세금계산서',
   card: '카드',
   cash_receipt: '현금영수증',
+}
+
+const expenseCategoryLabel: Record<Expense['category'], string> = {
+  rent: '임차료',
+  utilities: '수도·전기·가스',
+  supplies: '소모품·재고',
+  communication: '통신',
+  equipment: '장비·도구',
+  other: '기타',
 }
 
 function money(n: number) {
@@ -46,7 +56,8 @@ function money(n: number) {
 export function TaxPage() {
   const dispatch = useAppDispatch()
   const { payments } = useAppSelector((s) => s.sales)
-  const { documents, expenses, reportMonth } = useAppSelector((s) => s.tax)
+  const { documents, reportMonth } = useAppSelector((s) => s.tax)
+  const { items: expenses } = useAppSelector((s) => s.expenses)
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
@@ -59,7 +70,7 @@ export function TaxPage() {
         dispatch(setTaxDocuments(data.taxDocuments))
       }
       if (expenses.length === 0) {
-        dispatch(setTaxExpenses(data.taxExpenses))
+        dispatch(setExpenses(data.expenses))
       }
     }
     void load()
@@ -156,11 +167,18 @@ export function TaxPage() {
     [],
   )
 
-  const expenseColumns = useMemo<GridColDef<TaxExpense>[]>(
+  const expenseColumns = useMemo<GridColDef<Expense>[]>(
     () => [
       { field: 'bookedDate', headerName: '기장일', flex: 0.75, minWidth: 110 },
       { field: 'vendorName', headerName: '공급처', flex: 1, minWidth: 140 },
       { field: 'description', headerName: '적요', flex: 1.1, minWidth: 120 },
+      {
+        field: 'category',
+        headerName: '분류',
+        flex: 0.75,
+        minWidth: 110,
+        valueGetter: (_v, row) => expenseCategoryLabel[row.category],
+      },
       {
         field: 'supplyAmount',
         headerName: '공급가액',

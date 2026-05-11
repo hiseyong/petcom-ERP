@@ -7,6 +7,7 @@ const navItems = [
   { to: '/customers', label: '고객/반려동물' },
   { to: '/sales', label: '결제/매출' },
   { to: '/tax', label: '세무' },
+  { to: '/expenses', label: '지출' },
 ]
 
 export function AppLayout() {

@@ -5,8 +5,8 @@ import type {
   PetProfile,
   PurchaseOrder,
   Reservation,
+  Expense,
   TaxDocument,
-  TaxExpense,
 } from '../types/domain'
 import customersJson from './mock-data/customers.json'
 import petsJson from './mock-data/pets.json'
@@ -15,7 +15,7 @@ import paymentsJson from './mock-data/payments.json'
 import purchaseOrdersJson from './mock-data/purchase-orders.json'
 import dashboardAlertsJson from './mock-data/dashboard-alerts.json'
 import taxDocumentsJson from './mock-data/tax-documents.json'
-import taxExpensesJson from './mock-data/tax-expenses.json'
+import expensesJson from './mock-data/expenses.json'
 
 export const customersSeed: Customer[] = customersJson as Customer[]
 export const petsSeed: PetProfile[] = petsJson as PetProfile[]
@@ -24,4 +24,4 @@ export const paymentsSeed: Payment[] = paymentsJson as Payment[]
 export const purchaseOrdersSeed: PurchaseOrder[] = purchaseOrdersJson as PurchaseOrder[]
 export const dashboardAlertsSeed: DashboardAlert[] = dashboardAlertsJson as DashboardAlert[]
 export const taxDocumentsSeed: TaxDocument[] = taxDocumentsJson as TaxDocument[]
-export const taxExpensesSeed: TaxExpense[] = taxExpensesJson as TaxExpense[]
+export const expensesSeed: Expense[] = expensesJson as Expense[]

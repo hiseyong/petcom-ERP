@@ -7,7 +7,8 @@
     "supplyAmount": 2727273,
     "vatAmount": 272727,
     "totalAmount": 3000000,
-    "evidence": "tax_invoice"
+    "evidence": "tax_invoice",
+    "category": "rent"
   },
   {
     "id": "te2",
@@ -17,7 +18,8 @@
     "supplyAmount": 136364,
     "vatAmount": 13636,
     "totalAmount": 150000,
-    "evidence": "card"
+    "evidence": "card",
+    "category": "utilities"
   },
   {
     "id": "te3",
@@ -27,7 +29,8 @@
     "supplyAmount": 454545,
     "vatAmount": 45455,
     "totalAmount": 500000,
-    "evidence": "tax_invoice"
+    "evidence": "tax_invoice",
+    "category": "supplies"
   },
   {
     "id": "te4",
@@ -37,7 +40,8 @@
     "supplyAmount": 181818,
     "vatAmount": 18182,
     "totalAmount": 200000,
-    "evidence": "cash_receipt"
+    "evidence": "cash_receipt",
+    "category": "equipment"
   },
   {
     "id": "te5",
@@ -47,6 +51,7 @@
     "supplyAmount": 90909,
     "vatAmount": 9091,
     "totalAmount": 100000,
-    "evidence": "card"
+    "evidence": "card",
+    "category": "communication"
   }
 ]
