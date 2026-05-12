@@ -251,110 +251,101 @@ export function HomePage() {
     [now, reservationItems, purchaseOrders, dashboardAlerts],
   )
 
-  return (
-    <Stack spacing={3}>
-      <Card>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h5" gutterBottom>
-            안녕하세요, {tenantInfo.companyName}님.
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            오늘도 반려동물 케어 운영을 더 쉽고 빠르게 관리해보세요.
-          </Typography>
-          <Stack sx={{ mt: 4, alignItems: 'center', textAlign: 'center' }}>
-            <Typography
-              sx={{
-                fontSize: { xs: 56, md: 88 },
-                lineHeight: 1,
-                fontWeight: 700,
-                letterSpacing: '-0.04em',
-                color: 'text.primary',
-              }}
-            >
-              {formattedNow}
-            </Typography>
-            <Typography sx={{ mt: 1, color: 'text.secondary', letterSpacing: '0.01em' }}>
-              {formattedDate}
-            </Typography>
-            <Typography
-              sx={{
-                mt: 2.5,
-                fontSize: { xs: 22, md: 28 },
-                fontWeight: 600,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {greetingMessage}, {tenantInfo.companyName}님.
-            </Typography>
-          </Stack>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent sx={{ p: 3 }}>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
-            <Typography variant="h6">해야 할 일</Typography>
-            <Typography variant="caption" color="text.secondary">
-              기준 {formattedNow} · 예약·발주·알림을 시각 순으로 정렬
-            </Typography>
-          </Stack>
-          <Stack divider={<Divider flexItem />} spacing={0} sx={{ mt: 2 }}>
-            {orderedTasks.length === 0 ? (
-              <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
-                현재 표시할 할 일이 없습니다.
+  const taskList =
+    orderedTasks.length === 0 ? (
+      <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
+        현재 표시할 할 일이 없습니다.
+      </Typography>
+    ) : (
+      orderedTasks.slice(0, 40).map((task) => {
+        const inner = (
+          <Stack
+            direction="row"
+            spacing={1.5}
+            sx={{
+              py: 1.75,
+              alignItems: 'flex-start',
+              ...(task.to
+                ? {
+                    cursor: 'pointer',
+                    borderRadius: 1,
+                    mx: -1,
+                    px: 1,
+                    transition: 'background-color 120ms ease',
+                    '&:hover': { bgcolor: 'rgba(91, 108, 255, 0.06)' },
+                  }
+                : {}),
+            }}
+          >
+            <Box sx={{ minWidth: 0, flex: 1 }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.5 }}>
+                <Typography variant="subtitle2">{task.title}</Typography>
+                <Chip label={task.chipLabel} size="small" color={task.chipColor} variant="outlined" sx={{ height: 22 }} />
+              </Stack>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                {task.subtitle}
               </Typography>
-            ) : (
-              orderedTasks.slice(0, 24).map((task) => {
-                const inner = (
-                  <Stack
-                    direction="row"
-                    spacing={1.5}
-                    sx={{
-                      py: 1.75,
-                      alignItems: 'flex-start',
-                      ...(task.to
-                        ? {
-                            cursor: 'pointer',
-                            borderRadius: 1,
-                            mx: -1,
-                            px: 1,
-                            transition: 'background-color 120ms ease',
-                            '&:hover': { bgcolor: 'rgba(91, 108, 255, 0.06)' },
-                          }
-                        : {}),
-                    }}
-                  >
-                    <Box sx={{ minWidth: 0, flex: 1 }}>
-                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.5 }}>
-                        <Typography variant="subtitle2">{task.title}</Typography>
-                        <Chip label={task.chipLabel} size="small" color={task.chipColor} variant="outlined" sx={{ height: 22 }} />
-                      </Stack>
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                        {task.subtitle}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-                        {task.meta}
-                      </Typography>
-                    </Box>
-                    {task.to ? (
-                      <ChevronRightIcon sx={{ color: 'text.disabled', flexShrink: 0, mt: 0.25 }} fontSize="small" />
-                    ) : null}
-                  </Stack>
-                )
-                return task.to ? (
-                  <Link key={task.id} to={task.to} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
-                    {inner}
-                  </Link>
-                ) : (
-                  <Box key={task.id}>{inner}</Box>
-                )
-              })
-            )}
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                {task.meta}
+              </Typography>
+            </Box>
+            {task.to ? (
+              <ChevronRightIcon sx={{ color: 'text.disabled', flexShrink: 0, mt: 0.25 }} fontSize="small" />
+            ) : null}
           </Stack>
-        </CardContent>
-      </Card>
+        )
+        return task.to ? (
+          <Link key={task.id} to={task.to} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            {inner}
+          </Link>
+        ) : (
+          <Box key={task.id}>{inner}</Box>
+        )
+      })
+    )
 
-      <Grid container spacing={2}>
+  return (
+    <Grid container spacing={2} sx={{ alignItems: 'stretch' }}>
+      <Grid size={{ xs: 12, md: 8 }}>
+        <Stack spacing={3}>
+          <Card>
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="h5" gutterBottom>
+                안녕하세요, {tenantInfo.companyName}님.
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                오늘도 반려동물 케어 운영을 더 쉽고 빠르게 관리해보세요.
+              </Typography>
+              <Stack sx={{ mt: 4, alignItems: 'center', textAlign: 'center' }}>
+                <Typography
+                  sx={{
+                    fontSize: { xs: 56, md: 88 },
+                    lineHeight: 1,
+                    fontWeight: 700,
+                    letterSpacing: '-0.04em',
+                    color: 'text.primary',
+                  }}
+                >
+                  {formattedNow}
+                </Typography>
+                <Typography sx={{ mt: 1, color: 'text.secondary', letterSpacing: '0.01em' }}>
+                  {formattedDate}
+                </Typography>
+                <Typography
+                  sx={{
+                    mt: 2.5,
+                    fontSize: { xs: 22, md: 28 },
+                    fontWeight: 600,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {greetingMessage}, {tenantInfo.companyName}님.
+                </Typography>
+              </Stack>
+            </CardContent>
+          </Card>
+
+          <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: '100%' }}>
             <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
@@ -460,32 +451,82 @@ export function HomePage() {
         </Grid>
       </Grid>
 
-      <Card>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            고객사 정보
-          </Typography>
-          <Grid container spacing={2}>
-            {infoRows.map((row) => (
-              <Grid key={row.label} size={{ xs: 12, md: 6 }}>
-                <Stack
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    border: '1px solid rgba(130, 142, 180, 0.2)',
-                    bgcolor: 'rgba(255, 255, 255, 0.7)',
-                  }}
-                >
-                  <Typography variant="caption" color="text.secondary">
-                    {row.label}
-                  </Typography>
-                  <Typography variant="body1">{row.value}</Typography>
-                </Stack>
+          <Card>
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                고객사 정보
+              </Typography>
+              <Grid container spacing={2}>
+                {infoRows.map((row) => (
+                  <Grid key={row.label} size={{ xs: 12, md: 6 }}>
+                    <Stack
+                      sx={{
+                        p: 2,
+                        borderRadius: 2,
+                        border: '1px solid rgba(130, 142, 180, 0.2)',
+                        bgcolor: 'rgba(255, 255, 255, 0.7)',
+                      }}
+                    >
+                      <Typography variant="caption" color="text.secondary">
+                        {row.label}
+                      </Typography>
+                      <Typography variant="body1">{row.value}</Typography>
+                    </Stack>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-        </CardContent>
-      </Card>
-    </Stack>
+            </CardContent>
+          </Card>
+        </Stack>
+      </Grid>
+
+      <Grid size={{ xs: 12, md: 4 }}>
+        <Card
+          sx={{
+            position: { xs: 'static', md: 'sticky' },
+            top: { md: 88 },
+            width: '100%',
+            maxHeight: { xs: 400, md: 'calc(100vh - 96px)' },
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}
+        >
+          <CardContent
+            sx={{
+              p: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1,
+              minHeight: 0,
+              overflow: 'hidden',
+            }}
+          >
+            <Typography variant="h6">해야 할 일</Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+              기준 {formattedNow} · 시각 순
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Box
+              component="section"
+              role="region"
+              aria-label="해야 할 일 목록"
+              sx={{
+                overflowY: 'auto',
+                flex: 1,
+                minHeight: 0,
+                pr: 0.5,
+                mx: -0.5,
+                px: 0.5,
+              }}
+            >
+              <Stack divider={<Divider flexItem />} spacing={0}>
+                {taskList}
+              </Stack>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   )
 }
