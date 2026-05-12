@@ -19,7 +19,7 @@ import type { DashboardAlert, PurchaseOrder, Reservation } from '../../shared/ty
 import { setReservations } from '../reservations/reservationsSlice'
 
 const tenantInfo = {
-  companyName: '언타이틀드',
+  companyName: '펫컴',
   representative: '이재민',
   businessNo: '123-45-67890',
   address: '서울특별시 강남구 테헤란로 123, 5층',
