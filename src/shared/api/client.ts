@@ -7,6 +7,8 @@ import {
   reservationsSeed,
   taxDocumentsSeed,
   expensesSeed,
+  staffMembersSeed,
+  staffRosterSeed,
 } from './mockDb'
 
 const delay = async (ms = 100) => {
@@ -25,6 +27,8 @@ export const apiClient = {
       dashboardAlerts: dashboardAlertsSeed,
       taxDocuments: taxDocumentsSeed,
       expenses: expensesSeed,
+      staffMembers: staffMembersSeed,
+      staffRoster: staffRosterSeed,
     }
   },
 }

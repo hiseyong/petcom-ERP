@@ -10,6 +10,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { Link } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { apiClient } from '../../shared/api/client'
@@ -77,6 +78,115 @@ function formatDateTime(iso: string) {
   }).format(new Date(iso))
 }
 
+function reservationStartMs(r: Reservation) {
+  return new Date(`${r.date}T${r.time}:00`).getTime()
+}
+
+const DEFAULT_SLOT_MS = 90 * 60 * 1000
+const TASK_HORIZON_MS = 7 * 24 * 60 * 60 * 1000
+
+interface HomeTask {
+  id: string
+  sortTime: number
+  title: string
+  subtitle: string
+  meta: string
+  to?: string
+  chipLabel: string
+  chipColor: 'default' | 'primary' | 'warning' | 'error' | 'info' | 'success'
+}
+
+function buildHomeTasks(
+  now: Date,
+  reservations: Reservation[],
+  purchaseOrders: PurchaseOrder[],
+  alerts: DashboardAlert[],
+): HomeTask[] {
+  const nowMs = now.getTime()
+  const tasks: HomeTask[] = []
+
+  for (const po of purchaseOrders) {
+    if (po.status === 'delayed') {
+      const sortTime = new Date(`${po.expectedDate}T00:00:00`).getTime()
+      tasks.push({
+        id: `po-delayed-${po.id}`,
+        sortTime,
+        title: '지연 발주 확인',
+        subtitle: `${po.supplierName} — ${po.itemSummary}`,
+        meta: `입고 예정 ${formatShortDate(po.expectedDate)}`,
+        chipLabel: '지연',
+        chipColor: 'error',
+      })
+    }
+  }
+
+  for (const r of reservations) {
+    if (r.status === 'pending') {
+      tasks.push({
+        id: `res-pending-${r.id}`,
+        sortTime: reservationStartMs(r),
+        title: '신규 예약 확정 처리',
+        subtitle: `${r.customerName} · ${r.petName} — ${r.serviceName}`,
+        meta: `${formatShortDate(r.date)} ${r.time} · ${r.staffName}`,
+        to: '/reservations',
+        chipLabel: '대기',
+        chipColor: 'warning',
+      })
+    }
+  }
+
+  for (const r of reservations) {
+    if (r.status !== 'confirmed') continue
+    const start = reservationStartMs(r)
+    if (start + DEFAULT_SLOT_MS <= nowMs) continue
+    if (start > nowMs + TASK_HORIZON_MS) continue
+    tasks.push({
+      id: `res-confirmed-${r.id}`,
+      sortTime: start,
+      title: '예약 일정',
+      subtitle: `${r.customerName} · ${r.petName} — ${r.serviceName}`,
+      meta: `${formatShortDate(r.date)} ${r.time} · ${r.staffName}`,
+      to: '/reservations',
+      chipLabel: '예정',
+      chipColor: 'primary',
+    })
+  }
+
+  for (const po of purchaseOrders) {
+    if (po.status === 'received' || po.status === 'delayed') continue
+    const sortTime = new Date(`${po.expectedDate}T09:00:00`).getTime()
+    tasks.push({
+      id: `po-active-${po.id}`,
+      sortTime,
+      title: '입고·발주 확인',
+      subtitle: `${po.supplierName} — ${po.itemSummary}`,
+      meta: `${purchaseStatusLabels[po.status]} · 입고 예정 ${formatShortDate(po.expectedDate)}`,
+      chipLabel: purchaseStatusLabels[po.status],
+      chipColor: purchaseStatusColor[po.status],
+    })
+  }
+
+  for (const a of alerts) {
+    if (a.severity === 'success') continue
+    tasks.push({
+      id: `alert-${a.id}`,
+      sortTime: new Date(a.createdAt).getTime(),
+      title: a.title,
+      subtitle: a.message,
+      meta: formatDateTime(a.createdAt),
+      chipLabel: a.severity === 'warning' ? '주의' : '안내',
+      chipColor: alertSeverityColor[a.severity],
+    })
+  }
+
+  tasks.sort((a, b) => {
+    if (a.sortTime !== b.sortTime) return a.sortTime - b.sortTime
+    return a.id.localeCompare(b.id)
+  })
+
+  return tasks
+}
+
 export function HomePage() {
   const dispatch = useAppDispatch()
   const reservationItems = useAppSelector((s) => s.reservations.items)
@@ -136,6 +246,11 @@ export function HomePage() {
     return [...pending].sort((a, b) => reservationSortKey(b).localeCompare(reservationSortKey(a)))
   }, [reservationItems])
 
+  const orderedTasks = useMemo(
+    () => buildHomeTasks(now, reservationItems, purchaseOrders, dashboardAlerts),
+    [now, reservationItems, purchaseOrders, dashboardAlerts],
+  )
+
   return (
     <Stack spacing={3}>
       <Card>
@@ -171,6 +286,70 @@ export function HomePage() {
             >
               {greetingMessage}, {tenantInfo.companyName}님.
             </Typography>
+          </Stack>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent sx={{ p: 3 }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
+            <Typography variant="h6">해야 할 일</Typography>
+            <Typography variant="caption" color="text.secondary">
+              기준 {formattedNow} · 예약·발주·알림을 시각 순으로 정렬
+            </Typography>
+          </Stack>
+          <Stack divider={<Divider flexItem />} spacing={0} sx={{ mt: 2 }}>
+            {orderedTasks.length === 0 ? (
+              <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
+                현재 표시할 할 일이 없습니다.
+              </Typography>
+            ) : (
+              orderedTasks.slice(0, 24).map((task) => {
+                const inner = (
+                  <Stack
+                    direction="row"
+                    spacing={1.5}
+                    sx={{
+                      py: 1.75,
+                      alignItems: 'flex-start',
+                      ...(task.to
+                        ? {
+                            cursor: 'pointer',
+                            borderRadius: 1,
+                            mx: -1,
+                            px: 1,
+                            transition: 'background-color 120ms ease',
+                            '&:hover': { bgcolor: 'rgba(91, 108, 255, 0.06)' },
+                          }
+                        : {}),
+                    }}
+                  >
+                    <Box sx={{ minWidth: 0, flex: 1 }}>
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.5 }}>
+                        <Typography variant="subtitle2">{task.title}</Typography>
+                        <Chip label={task.chipLabel} size="small" color={task.chipColor} variant="outlined" sx={{ height: 22 }} />
+                      </Stack>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        {task.subtitle}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                        {task.meta}
+                      </Typography>
+                    </Box>
+                    {task.to ? (
+                      <ChevronRightIcon sx={{ color: 'text.disabled', flexShrink: 0, mt: 0.25 }} fontSize="small" />
+                    ) : null}
+                  </Stack>
+                )
+                return task.to ? (
+                  <Link key={task.id} to={task.to} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <Box key={task.id}>{inner}</Box>
+                )
+              })
+            )}
           </Stack>
         </CardContent>
       </Card>

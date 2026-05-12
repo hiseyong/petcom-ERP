@@ -1,0 +1,63 @@
+[
+  {
+    "date": "2026-05-01",
+    "dutyStaffId": "s6",
+    "assignedStaffIds": ["s1", "s2", "s5"],
+    "notes": "공휴일 대체 근무"
+  },
+  {
+    "date": "2026-05-02",
+    "dutyStaffId": "s4",
+    "assignedStaffIds": ["s1", "s3", "s4", "s5"]
+  },
+  {
+    "date": "2026-05-03",
+    "dutyStaffId": "s2",
+    "assignedStaffIds": ["s2", "s3", "s5"]
+  },
+  {
+    "date": "2026-05-05",
+    "dutyStaffId": "s1",
+    "assignedStaffIds": ["s1", "s4", "s5"]
+  },
+  {
+    "date": "2026-05-07",
+    "dutyStaffId": "s3",
+    "assignedStaffIds": ["s1", "s2", "s3"]
+  },
+  {
+    "date": "2026-05-10",
+    "dutyStaffId": "s6",
+    "assignedStaffIds": ["s2", "s4", "s6"]
+  },
+  {
+    "date": "2026-05-11",
+    "dutyStaffId": "s4",
+    "assignedStaffIds": ["s1", "s3", "s5"]
+  },
+  {
+    "date": "2026-05-12",
+    "dutyStaffId": "s2",
+    "assignedStaffIds": ["s1", "s2", "s5"]
+  },
+  {
+    "date": "2026-05-15",
+    "dutyStaffId": "s1",
+    "assignedStaffIds": ["s1", "s3", "s4"]
+  },
+  {
+    "date": "2026-05-18",
+    "dutyStaffId": "s3",
+    "assignedStaffIds": ["s2", "s3", "s5"]
+  },
+  {
+    "date": "2026-05-20",
+    "dutyStaffId": "s6",
+    "assignedStaffIds": ["s1", "s4", "s6"]
+  },
+  {
+    "date": "2026-05-25",
+    "dutyStaffId": "s2",
+    "assignedStaffIds": ["s1", "s2", "s3", "s5"]
+  }
+]

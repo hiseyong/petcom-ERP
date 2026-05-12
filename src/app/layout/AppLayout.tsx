@@ -8,6 +8,7 @@ const navItems = [
   { to: '/sales', label: '결제/매출' },
   { to: '/tax', label: '세무' },
   { to: '/expenses', label: '지출' },
+  { to: '/staff', label: '인력' },
 ]
 
 export function AppLayout() {
@@ -37,7 +38,7 @@ export function AppLayout() {
           >
             PetCom ERP
           </Typography>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', justifyContent: 'flex-end', rowGap: 1 }}>
             {navItems.map((item) => (
               <Button
                 key={item.to}

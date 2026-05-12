@@ -97,3 +97,16 @@ export interface Expense {
   evidence: ExpenseEvidence
   category: ExpenseCategory
 }
+
+export interface StaffMember {
+  id: string
+  name: string
+  role: string
+}
+
+export interface StaffRosterDay {
+  date: string
+  dutyStaffId: string
+  assignedStaffIds: string[]
+  notes?: string
+}

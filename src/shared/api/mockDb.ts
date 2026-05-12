@@ -7,6 +7,8 @@ import type {
   Reservation,
   Expense,
   TaxDocument,
+  StaffMember,
+  StaffRosterDay,
 } from '../types/domain'
 import customersJson from './mock-data/customers.json'
 import petsJson from './mock-data/pets.json'
@@ -16,6 +18,8 @@ import purchaseOrdersJson from './mock-data/purchase-orders.json'
 import dashboardAlertsJson from './mock-data/dashboard-alerts.json'
 import taxDocumentsJson from './mock-data/tax-documents.json'
 import expensesJson from './mock-data/expenses.json'
+import staffMembersJson from './mock-data/staff-members.json'
+import staffRosterJson from './mock-data/staff-roster.json'
 
 export const customersSeed: Customer[] = customersJson as Customer[]
 export const petsSeed: PetProfile[] = petsJson as PetProfile[]
@@ -25,3 +29,5 @@ export const purchaseOrdersSeed: PurchaseOrder[] = purchaseOrdersJson as Purchas
 export const dashboardAlertsSeed: DashboardAlert[] = dashboardAlertsJson as DashboardAlert[]
 export const taxDocumentsSeed: TaxDocument[] = taxDocumentsJson as TaxDocument[]
 export const expensesSeed: Expense[] = expensesJson as Expense[]
+export const staffMembersSeed: StaffMember[] = staffMembersJson as StaffMember[]
+export const staffRosterSeed: StaffRosterDay[] = staffRosterJson as StaffRosterDay[]

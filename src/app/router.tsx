@@ -6,6 +6,7 @@ import { CustomersPage } from '../features/customers/CustomersPage'
 import { SalesPage } from '../features/sales/SalesPage'
 import { TaxPage } from '../features/tax/TaxPage'
 import { ExpensesPage } from '../features/expenses/ExpensesPage'
+import { StaffingPage } from '../features/staff/StaffingPage'
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: 'sales', element: <SalesPage /> },
       { path: 'tax', element: <TaxPage /> },
       { path: 'expenses', element: <ExpensesPage /> },
+      { path: 'staff', element: <StaffingPage /> },
     ],
   },
 ])
